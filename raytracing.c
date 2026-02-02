@@ -7,6 +7,7 @@
 #define WIDTH 900
 #define HEIGHT 600
 #define COLOR_WHITE 0xffffffff
+#define COLOR_BLACK 0x00000000
 
 typedef struct
 {
@@ -15,13 +16,14 @@ typedef struct
     double r;
 } Circle;
 
-void draw_circle(Circle light_source, SDL_Surface *surface, int OFFSET_X, int OFFSET_Y) {
+void draw_circle(Circle light_source, SDL_Surface *surface, int OFFSET_X, int OFFSET_Y)
+{
     double dist_squared;
     for (int i = 0; i < light_source.r * 2; i++)
     {
         for (int j = 0; j < light_source.r * 2; j++)
         {
-            dist_squared = pow(i - light_source.r ,2) + pow(j - light_source.r, 2);
+            dist_squared = pow(i - light_source.r, 2) + pow(j - light_source.r, 2);
             if (dist_squared <= pow(light_source.r, 2))
             {
                 SDL_Rect little_rect = (SDL_Rect){i + OFFSET_X, j + OFFSET_Y, 1, 1};
@@ -39,24 +41,31 @@ int main(void)
     // SDL_FillRect(surface, &rect, COLOR_WHITE);
     int quit = 0;
 
-
     Circle light_source;
     light_source.r = 50;
-    //draws circle
+    // draws circle
     draw_circle(light_source, surface, 200, 200);
 
     SDL_UpdateWindowSurface(window);
 
+    SDL_Rect rect = (SDL_Rect){0, 0, WIDTH, HEIGHT};
     SDL_Event e;
     while (!quit)
     {
         while (SDL_PollEvent(&e) != 0)
         {
-            if (e.type == SDL_MOUSEMOTION) {
-                int x, y = 0;
-                SDL_GetMouseState(&x, &y);
-                printf("x: %d y: %d\n", x, y);
-            } else if (e.type == SDL_QUIT) { 
+            int x, y = 0;
+            SDL_GetMouseState(&x, &y);
+            if (e.type == SDL_MOUSEMOTION )
+            {
+                // printf("x: %d y: %d\n", x, y);
+                SDL_FillRect(surface, &rect, COLOR_BLACK);
+                draw_circle(light_source, surface, x, y);
+                // draw_circle(light_source, surface, x - light_source.r, y - light_source.r);
+                SDL_UpdateWindowSurface(window);
+            }
+            else if (e.type == SDL_QUIT)
+            {
                 quit = 1;
             }
         }
