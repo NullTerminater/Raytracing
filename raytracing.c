@@ -15,7 +15,21 @@ typedef struct
     double r;
 } Circle;
 
-
+void draw_circle(Circle light_source, SDL_Surface *surface, int OFFSET_X, int OFFSET_Y) {
+    double dist_squared;
+    for (int i = 0; i < light_source.r * 2; i++)
+    {
+        for (int j = 0; j < light_source.r * 2; j++)
+        {
+            dist_squared = pow(i - light_source.r ,2) + pow(j - light_source.r, 2);
+            if (dist_squared <= pow(light_source.r, 2))
+            {
+                SDL_Rect little_rect = (SDL_Rect){i + OFFSET_X, j + OFFSET_Y, 1, 1};
+                SDL_FillRect(surface, &little_rect, COLOR_WHITE);
+            }
+        }
+    }
+}
 int main(void)
 {
     SDL_Init(SDL_INIT_VIDEO);
@@ -25,24 +39,11 @@ int main(void)
     // SDL_FillRect(surface, &rect, COLOR_WHITE);
     int quit = 0;
 
+
     Circle light_source;
     light_source.r = 50;
-
-    double dist_squared;
-
     //draws circle
-    for (int i = 0; i < light_source.r * 2; i++)
-    {
-        for (int j = 0; j < light_source.r * 2; j++)
-        {
-            dist_squared = pow(i - light_source.r ,2) + pow(j - light_source.r, 2);
-            if (dist_squared <= pow(light_source.r, 2))
-            {
-                SDL_Rect little_rect = (SDL_Rect){i, j, 1, 1};
-                SDL_FillRect(surface, &little_rect, COLOR_WHITE);
-            }
-        }
-    }
+    draw_circle(light_source, surface, 200, 200);
 
     SDL_UpdateWindowSurface(window);
 
@@ -51,8 +52,11 @@ int main(void)
     {
         while (SDL_PollEvent(&e) != 0)
         {
-            if (e.type == SDL_QUIT)
-            {
+            if (e.type == SDL_MOUSEMOTION) {
+                int x, y = 0;
+                SDL_GetMouseState(&x, &y);
+                printf("x: %d y: %d\n", x, y);
+            } else if (e.type == SDL_QUIT) { 
                 quit = 1;
             }
         }
