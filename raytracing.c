@@ -11,6 +11,7 @@
 #define COLOR_WHITE 0xffffffff
 #define COLOR_BLACK 0x00000000
 #define NUM_RAYS 100
+#define RADIANS 180 / M_PI
 
 
 typedef struct
@@ -38,14 +39,10 @@ void draw_circle(Circle light_source, SDL_Surface *surface, int OFFSET_X, int OF
 }
 
 void draw_ray(SDL_Surface *surface, int x, int y, int pixel_width){
-    // while not out of bounds
-    int x_pos = 0;
-    int y_pos = 0;
-    while((x > 0 && x < WIDTH) && (y > 0 && y < HEIGHT)) {
-        SDL_Rect wave_rect = (SDL_Rect){cos(x), sin(y), pixel_width, pixel_width};
-        // x_pos = cos(x);
-        // y_pos = sin(y);
-        printf("cos(%d): %f\tsin(%d): %f\n", x, cos(x), y, sin(y));
+    // while not out of bounds 
+    while((x > 0 && x < WIDTH) || (y > 0 && y < HEIGHT)) {
+        SDL_Rect wave_rect = (SDL_Rect){pow(cos(x), 2)*x, pow(sin(x), 2)*x, pixel_width, pixel_width};
+        printf("cos(%d): %f\tsin(%d): %f\n", x, pow(cos(x),2), y, pow(sin(y),2));
         SDL_FillRect(surface, &wave_rect, COLOR_WHITE ); 
         x++;
         y++; 
