@@ -41,8 +41,10 @@ void draw_circle(Circle light_source, SDL_Surface *surface, int OFFSET_X, int OF
 void draw_ray(SDL_Surface *surface, int x, int y, int pixel_width){
     // while not out of bounds 
     while((x > 0 && x < WIDTH) || (y > 0 && y < HEIGHT)) {
-        SDL_Rect wave_rect = (SDL_Rect){pow(cos(x), 2)*x, pow(sin(x), 2)*x, pixel_width, pixel_width};
-        printf("cos(%d): %f\tsin(%d): %f\n", x, pow(cos(x),2), y, pow(sin(y),2));
+        // SDL_Rect wave_rect = (SDL_Rect){pow(cos(x), 2)*RADIANS, pow(sin(x), 2)*RADIANS, pixel_width, pixel_width};
+        SDL_Rect wave_rect = (SDL_Rect){cos(RADIANS)*x, sin(RADIANS)*y, pixel_width, pixel_width};
+        // printf("cos(%d): %f\tsin(%d): %f\n", x, pow(cos(x),2), y, pow(sin(y),2));
+        printf("cos(%d): %f\tsin(%d): %f\n", x, cos(RADIANS)*x, y, sin(RADIANS)*y);
         SDL_FillRect(surface, &wave_rect, COLOR_WHITE ); 
         x++;
         y++; 
