@@ -40,14 +40,15 @@ void draw_circle(Circle light_source, SDL_Surface *surface, int OFFSET_X, int OF
 
 void draw_ray(SDL_Surface *surface, int x, int y, int pixel_width){
     // while not out of bounds 
-    while((x > 0 && x < WIDTH) || (y > 0 && y < HEIGHT)) {
-        // SDL_Rect wave_rect = (SDL_Rect){pow(cos(x), 2)*RADIANS, pow(sin(x), 2)*RADIANS, pixel_width, pixel_width};
-        SDL_Rect wave_rect = (SDL_Rect){cos(RADIANS)*x, sin(RADIANS)*y, pixel_width, pixel_width};
-        // printf("cos(%d): %f\tsin(%d): %f\n", x, pow(cos(x),2), y, pow(sin(y),2));
-        printf("cos(%d): %f\tsin(%d): %f\n", x, cos(RADIANS)*x, y, sin(RADIANS)*y);
+    // while((x > 0 && x < WIDTH) || (y > 0 && y < HEIGHT)) {
+    for(int i = 0; i < 720; i += 1) {
+        double angle = (30 / 180) * M_PI;
+        // SDL_Rect wave_rect = (SDL_Rect){i + cos(RADIANS*i), i + sin(RADIANS*i), pixel_width, pixel_width};
+        SDL_Rect wave_rect = (SDL_Rect){x, y, pixel_width, pixel_width};
         SDL_FillRect(surface, &wave_rect, COLOR_WHITE ); 
-        x++;
-        y++; 
+        x+=acos(angle);
+        y+=asin(angle);
+        printf("(%d,%d)\n", x,y); 
     }
 
 }
@@ -79,10 +80,10 @@ int main(void)
             if (e.type == SDL_MOUSEMOTION )
             {
                 SDL_FillRect(surface, &full_rect, COLOR_BLACK);
-                draw_circle(light_source, surface, x, y);
+                // draw_circle(light_source, surface, x, y);
                 SDL_FillRect(surface, &wave_rect, COLOR_WHITE);
-                draw_ray(surface, 100, 100, 1);
-                // draw_circle(light_source, surface, x - light_source.r, y - light_source.r);
+                draw_ray(surface, x-light_source.r, y-light_source.r, 1);
+                draw_circle(light_source, surface, x - light_source.r, y - light_source.r);
                 SDL_UpdateWindowSurface(window);
             }
             else if (e.type == SDL_QUIT)
